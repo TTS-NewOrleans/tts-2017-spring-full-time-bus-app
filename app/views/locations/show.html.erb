@@ -1,35 +1,51 @@
 <p id="notice"><%= notice %></p>
 
-<h1>Your Get Away Bus!</h1>
+<div class="container-fluid">
+  <div class="row text-center">
+    <h1>Your Get Away Bus!</h1>
+  </div>
 
-<h3 class="text-muted">Your Current Location</h3>
+  <div class="row">
+    <div class="col-md-6">
+      <h3 class="text-muted">Your Current Location</h3>
 
-<p class="text-muted">
-  <%= @location.full_street_address %> <small><%= link_to fa_icon('pencil', text: 'Edit'), edit_location_path(@location) %></small>
-</p>
+      <p class="text-muted">
+        <%= @location.full_street_address %> <small><%= link_to fa_icon('pencil', text: 'Edit'), edit_location_path(@location) %></small>
+      </p>
 
-<!-- I want my map here, please. No, really, please? -->
-<div id="map-canvas"></div>
+      <!-- I want my map here, please. No, really, please? -->
+      <div id="map-canvas"></div>
+    </div>
+    <div class="col-md-6">
+      <h3>The closest buses are...</h3>
 
-<h3>The closest buses are...</h3>
+      <% @buses.each do |bus| %>
+        <p>
+          <strong>Route: </strong><%= bus["ROUTE"] %> <%= bus["DIRECTION"] %> <br>
+          <strong>Bus Number: </strong><%= bus["VEHICLE"] %> <br>
+          <strong>Next Stop: </strong><%= bus["TIMEPOINT"] %>
+        </p>
+      <% end %>
 
-<% @buses.each do |bus| %>
-  <p>
-    <strong>Route: </strong><%= bus["ROUTE"] %> <%= bus["DIRECTION"] %> <br>
-    <strong>Bus Number: </strong><%= bus["VEHICLE"] %> <br>
-    <strong>Next Stop: </strong><%= bus["TIMEPOINT"] %>
-  </p>
-<% end %>
+      <% if @buses.empty? %>
+        <p>
+          Not really that close. (Time to walk, bike, taxi, Uber, Pogo Stick or <%= link_to 'edit your location', edit_location_path(@location) %>)
+        </p>
+      <% end %>
+    </div>
+  </div>
 
-<% if @buses.empty? %>
-  <p>
-    Not really that close. (Time to walk, bike, taxi, Uber, Pogo Stick or <%= link_to 'edit your location', edit_location_path(@location) %>)
-  </p>
-<% end %>
+  <div class="row" >
+    <div class="col-xs-12 text-center">
+      <%= link_to 'Edit', edit_location_path(@location), class: 'btn btn-default' %>
+
+      <br><br><br>
+    </div>
+  </div>
+</div>
 
 
 
-<%= link_to 'Edit', edit_location_path(@location) %>
 
 <script type="text/javascript" src="https://maps.googleapis.com/maps/api/js?key=<%= ENV['google_maps_api_key'] %>" ></script>
 
